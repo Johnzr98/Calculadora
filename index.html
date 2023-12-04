@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <title>Calculadora</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class=" text-center">
+                <img class="d-block mx-auto mb-4" src="imgs/logo2.png" width="102" height="87">
+                <h1 class="display-5 fw-bold text-body-emphasis">((SSI)) Grupo Financiero</h1>
+                
+                <div class="col-lg-6 mx-auto">
+                    <p class="lead mb-4">
+                        La calculadora de interés compuesto es una herramienta financiera clave para proyectar 
+                        ganancias en un mes/año. Ingresando el capital inicial, la tasa de interés mensual/anual y la frecuencia 
+                        de capitalización, facilita cálculos precisos que revelan el crecimiento acumulado.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-8 mx-auto text-center mt-3">
+            <form>
+                <div class="row">
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                        <div class="form-group ">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                            <label class="form-check-label" for="flexRadioDefault1">
+                            Interes efectivo mensual (E.M)
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                            <label class="form-check-label" for="flexRadioDefault2">
+                            Interes efectivo anual (E.A)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="form-group col-md-4">
+                        <label for="nombre" class="d-inline-block">Capital inicial</label>
+                        <input type="text" class="form-control d-inline-block" id="nombre" placeholder="$0">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="nombre" class="d-inline-block">Aporte mensual/anual</label>
+                        <input type="text" class="form-control d-inline-block" id="nombre" placeholder="$1,000,000">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="email" class="d-inline-block">Porcentaje</label>
+                        <input type="email" class="form-control d-inline-block" id="email" placeholder="10.0%">
+                    </div>
+                </div>
+                <div class="row-3 mt-3">
+                    <button type="submit" class="btn btn-primary">Ver resultados</button>
+                </div>
+            </form>
+        </div>
+        <div class="row mt-3">
+            <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col"># Mes/Año</th>
+                    <th scope="col">Total aportes</th>
+                    <th scope="col">Aportes más ganancias</th>
+                    <th scope="col">Total fin de mes/año</th>
+                    <th scope="col">Gannacias</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>$1,000,000</td>
+                    <td>1,000,000</td>
+                    <td>$1,100,000</td>
+                    <td>$100,000</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>$2,000,000</td>
+                    <td>2,100,000</td>
+                    <td>$2,310,000</td>
+                    <td>$210,000</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>$3,000,000</td>
+                    <td>3,310,000</td>
+                    <td>$3,641,000</td>
+                    <td>$331,000</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        <div class="row mt-3">
+
+        </div>
+    </div>
+</body>
+</html>
+
