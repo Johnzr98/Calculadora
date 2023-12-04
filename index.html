@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,88 +17,182 @@
                 <div class="col-lg-6 mx-auto">
                     <p class="lead mb-4">
                         La calculadora de interés compuesto es una herramienta financiera clave para proyectar 
-                        ganancias en un mes/año. Ingresando el capital inicial, la tasa de interés mensual/anual y la frecuencia 
+                        ganancias en un mes. Ingresando el capital inicial, la tasa de interés mensual y la frecuencia 
                         de capitalización, facilita cálculos precisos que revelan el crecimiento acumulado.</p>
                 </div>
             </div>
         </div>
         <div class="row col-md-8 mx-auto text-center mt-3">
             <form>
-                <div class="row">
-                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                        <div class="form-group ">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-                            <label class="form-check-label" for="flexRadioDefault1">
-                            Interes efectivo mensual (E.M)
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-                            <label class="form-check-label" for="flexRadioDefault2">
-                            Interes efectivo anual (E.A)
-                            </label>
-                        </div>
-                    </div>
-                </div>
                 <div class="row mt-3">
-                    <div class="form-group col-md-4">
-                        <label for="nombre" class="d-inline-block">Capital inicial</label>
-                        <input type="text" class="form-control d-inline-block" id="nombre" placeholder="$0">
+                    <div class="form-group col-md-6">
+                        <label class="d-inline-block">Aporte mensual</label>
+                        <input type="text" class="form-control d-inline-block" id="contribution" placeholder="$1,000,000">
                     </div>
-                    <div class="form-group col-md-4">
-                        <label for="nombre" class="d-inline-block">Aporte mensual/anual</label>
-                        <input type="text" class="form-control d-inline-block" id="nombre" placeholder="$1,000,000">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="email" class="d-inline-block">Porcentaje</label>
-                        <input type="email" class="form-control d-inline-block" id="email" placeholder="10.0%">
+                    <div class="form-group col-md-6">
+                        <label class="d-inline-block">Porcentaje</label>
+                        <input type="text" class="form-control d-inline-block" id="percentage" placeholder="10.0%">
                     </div>
                 </div>
                 <div class="row-3 mt-3">
-                    <button type="submit" class="btn btn-primary">Ver resultados</button>
+                    <button type="button" class="btn btn-primary" onclick="validateData()">Ver resultados</button>
                 </div>
             </form>
         </div>
         <div class="row mt-3">
-            <table class="table table-striped table-hover">
-                <thead>
+            <table class="table table-hover">
+                <thead class="sticky-top">
                   <tr>
-                    <th scope="col"># Mes/Año</th>
+                    <th scope="col"># Mes</th>
                     <th scope="col">Total aportes</th>
-                    <th scope="col">Aportes más ganancias</th>
-                    <th scope="col">Total fin de mes/año</th>
-                    <th scope="col">Gannacias</th>
+                    <th scope="col">Aporte invertido más ganancias</th>
+                    <th scope="col">Total fin de mes</th>
+                    <th scope="col">Ganancias fin de mes</th>
+                    <th scope="col">Ganancias totales</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>$1,000,000</td>
-                    <td>1,000,000</td>
-                    <td>$1,100,000</td>
-                    <td>$100,000</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>$2,000,000</td>
-                    <td>2,100,000</td>
-                    <td>$2,310,000</td>
-                    <td>$210,000</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>$3,000,000</td>
-                    <td>3,310,000</td>
-                    <td>$3,641,000</td>
-                    <td>$331,000</td>
-                  </tr>
+                <tbody id="myTable">
                 </tbody>
               </table>
         </div>
         <div class="row mt-3">
-
+            <div class="col-md-4">
+                <label class="d-inline-block">Invertido 12 meses</label>
+                <input id="allContributions" class="form-control" type="text" value="$0" readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="d-inline-block">Ganancias</label>
+                <input id="allEarnings" class="form-control" type="text" placeholder="$0" readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="d-inline-block">Total</label>
+                <input id="allAmount" class="form-control" type="text" placeholder="$0" readonly>
+            </div>
+        </div>
+        <div class="row mt-3 text-center">
+            <div class="col-md-12">
+                @copyright
+            </div> 
         </div>
     </div>
+    <script>
+        document.getElementById('contribution').addEventListener('input', function() {
+            this.value = convertToCurrency(this.value);
+        });
+
+        document.getElementById('percentage').addEventListener('input', function(event) {
+            let value = this.value.replace(/[^0-9.]/g, '');
+
+            if (event.inputType === 'deleteContentBackward') {
+                value = value.slice(0, -1);
+            }
+            
+            if (value.length === 0) {
+                this.value = '';
+                return;
+            }
+
+            this.value = value + '%';
+        });
+
+        function convertToCurrency(value) {
+            if (typeof value === 'number') {
+                value = Math.round(value);
+            }
+
+            newValue = value.toString().replace(/[^0-9]/g, '');
+
+            const currencyFormat = new Intl.NumberFormat('es-ES', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+            const formattedNumber = currencyFormat.format(Math.floor(newValue));
+            return '$' + formattedNumber.substring(0, formattedNumber.length - 3).trim();
+        }
+
+        function validateData() {
+            let contribution = document.getElementById('contribution').value;
+            let percentage = document.getElementById('percentage').value;
+
+            if (!contribution || !percentage) {
+                alert('Debe ingresar un aporte mensual con un porcentaje');
+                return;
+            }
+
+            contribution = Math.floor(contribution.replace(/[^0-9]/g, ''));
+            percentage = Math.floor(percentage.replace(/[^0-9.]/g, ''));
+
+            console.log({contribution});
+
+          this.buildDataTable(contribution, percentage);
+        };
+
+        function buildDataTable(contribution, percentage) {
+            const arrayData = [];
+            
+            const allContributions = document.getElementById('allContributions');
+            const allEarnings = document.getElementById('allEarnings');
+            const allAmount = document.getElementById('allAmount');
+
+            let sumContribution = contribution;
+            let allPercentage = percentage;
+            let profits = 0;
+            let totalProfits = 0;
+            let totalEndOfMonth = 0;
+            let contributionsMoreEarnings = 0;
+
+            for (let index = 1; index <= 12; index++) {
+                
+                contributionsMoreEarnings = totalProfits + sumContribution;
+                totalEndOfMonth = (contributionsMoreEarnings * (percentage/100) + contributionsMoreEarnings);
+                totalProfits = totalEndOfMonth - sumContribution;
+                profits = totalEndOfMonth - contributionsMoreEarnings;
+                
+                console.log({sumContribution});
+                console.log({contributionsMoreEarnings});
+                console.log({totalEndOfMonth});
+                console.log({profits});
+
+                const data = { 
+                    month: index, 
+                    contribution: this.convertToCurrency(sumContribution), 
+                    contributionsMoreEarnings: this.convertToCurrency(contributionsMoreEarnings), 
+                    totalEndOfMonth: this.convertToCurrency(totalEndOfMonth), 
+                    profits: this.convertToCurrency(profits), 
+                    totalProfits: this.convertToCurrency(totalProfits)
+                };
+
+                sumContribution += contribution; 
+
+                arrayData.push(data);
+            }
+
+            allContributions.value = this.convertToCurrency(sumContribution - contribution);
+            allEarnings.value = this.convertToCurrency(totalProfits);
+            allAmount.value = this.convertToCurrency(totalEndOfMonth);
+
+            this.fillTable(arrayData);
+        }
+
+        function fillTable(arrayData) {
+            const bodyTable = document.getElementById('myTable');
+            bodyTable.innerHTML = '';
+
+            arrayData.forEach((data) => {
+                const row = document.createElement('tr');
+
+                for (const property in data) {
+                    const cell = document.createElement('td');
+                    cell.textContent = data[property];
+                    row.appendChild(cell);
+                }
+
+                bodyTable.appendChild(row);
+            });
+        }
+    </script>
 </body>
 </html>
 
