@@ -71,7 +71,7 @@
         </div>
         <div class="row mt-3">
             <div class="col-md-4">
-                <label class="d-inline-block">Invertido 12 meses</label>
+                <label class="d-inline-block">Invertido en 12 meses</label>
                 <input id="allContributions" class="form-control" type="text" value="$0" readonly>
             </div>
             <div class="col-md-4">
@@ -90,16 +90,11 @@
         </div>
     </div>
     <script>
-
-        function handleRadioChange() {
-            const radioValue = document.querySelector('input[name="checkRadio"]:checked');
-
-            if (radioValue.id === 'checkOnlyProfits') {
-                console.log(true);
-            } else {
-             console.log(false);   
-            }
-        }
+        const bodyTable = document.getElementById('myTable');
+        const allContributions = document.getElementById('allContributions');
+        const allEarnings = document.getElementById('allEarnings');
+        const allAmount = document.getElementById('allAmount');
+        let isOnlyProfits = false;
 
         document.querySelectorAll('input[name="checkRadio"]').forEach(function (radio) {
             radio.addEventListener('change', handleRadioChange);
@@ -124,6 +119,24 @@
             this.value = value + '%';
         });
 
+        function clearData() {
+            bodyTable.innerHTML = '';
+            allContributions.value = '';
+            allEarnings.value = '';
+            allAmount.value = '';
+        }
+
+        function handleRadioChange() {
+            const radioValue = document.querySelector('input[name="checkRadio"]:checked');
+            clearData();
+
+            if (radioValue.id === 'checkOnlyProfits') {
+                isOnlyProfits = true;
+            } else {
+                isOnlyProfits = false;
+            }
+        }
+
         function convertToCurrency(value) {
             if (typeof value === 'number') {
                 value = Math.round(value);
@@ -146,24 +159,18 @@
             let percentage = document.getElementById('percentage').value;
 
             if (!contribution || !percentage) {
-                alert('Debe ingresar un aporte mensual con un porcentaje');
+                alert('Debe ingresar un aporte y un porcentaje');
                 return;
             }
 
             contribution = Math.floor(contribution.replace(/[^0-9]/g, ''));
             percentage = Math.floor(percentage.replace(/[^0-9.]/g, ''));
 
-            console.log({contribution});
-
-          this.buildDataTable(contribution, percentage);
+            this.buildDataTable(contribution, percentage);
         };
 
         function buildDataTable(contribution, percentage) {
             const arrayData = [];
-            
-            const allContributions = document.getElementById('allContributions');
-            const allEarnings = document.getElementById('allEarnings');
-            const allAmount = document.getElementById('allAmount');
 
             let sumContribution = contribution;
             let allPercentage = percentage;
@@ -173,16 +180,11 @@
             let contributionsMoreEarnings = 0;
 
             for (let index = 1; index <= 12; index++) {
-                
+
                 contributionsMoreEarnings = totalProfits + sumContribution;
                 totalEndOfMonth = (contributionsMoreEarnings * (percentage/100) + contributionsMoreEarnings);
                 totalProfits = totalEndOfMonth - sumContribution;
                 profits = totalEndOfMonth - contributionsMoreEarnings;
-                
-                console.log({sumContribution});
-                console.log({contributionsMoreEarnings});
-                console.log({totalEndOfMonth});
-                console.log({profits});
 
                 const data = { 
                     month: index, 
@@ -193,12 +195,21 @@
                     totalProfits: this.convertToCurrency(totalProfits)
                 };
 
-                sumContribution += contribution; 
+                if (!isOnlyProfits) {
+                    sumContribution += contribution; 
+                }
 
                 arrayData.push(data);
             }
 
-            allContributions.value = this.convertToCurrency(sumContribution - contribution);
+            this.clearData();
+
+            if (!isOnlyProfits) {
+                allContributions.value = this.convertToCurrency(sumContribution - contribution);
+            }else {
+                allContributions.value = this.convertToCurrency(contribution);
+            }
+
             allEarnings.value = this.convertToCurrency(totalProfits);
             allAmount.value = this.convertToCurrency(totalEndOfMonth);
 
@@ -206,8 +217,6 @@
         }
 
         function fillTable(arrayData) {
-            const bodyTable = document.getElementById('myTable');
-            bodyTable.innerHTML = '';
 
             arrayData.forEach((data) => {
                 const row = document.createElement('tr');
