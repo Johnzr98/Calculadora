@@ -22,11 +22,25 @@
                 </div>
             </div>
         </div>
-        <div class="row col-md-8 mx-auto text-center mt-3">
+        <div class="row col-md-8 mx-auto text-center mt-5">
             <form>
-                <div class="row mt-3">
+                <div class="row mt-3 justify-content-center">
+                    <div class="form-check col-md-4">
+                        <input class="form-check-input" type="radio" name="checkRadio" id="checkSameContribution" checked>
+                        <label class="form-check-label" for="checkSameContribution">
+                          Invertir cada mes el mismo aporte
+                        </label>
+                      </div>
+                      <div class="form-check col-md-4">
+                        <input class="form-check-input" type="radio" name="checkRadio" id="checkOnlyProfits">
+                        <label class="form-check-label" for="checkOnlyProfits">
+                          Invertir solo las ganancias
+                        </label>
+                      </div>
+                </div>
+                <div class="row mt-5 justify-content-center">
                     <div class="form-group col-md-6">
-                        <label class="d-inline-block">Aporte mensual</label>
+                        <label class="d-inline-block">Aporte</label>
                         <input type="text" class="form-control d-inline-block" id="contribution" placeholder="$1,000,000">
                     </div>
                     <div class="form-group col-md-6">
@@ -39,7 +53,7 @@
                 </div>
             </form>
         </div>
-        <div class="row mt-3">
+        <div class="row mt-5">
             <table class="table table-hover">
                 <thead class="sticky-top">
                   <tr>
@@ -69,13 +83,28 @@
                 <input id="allAmount" class="form-control" type="text" placeholder="$0" readonly>
             </div>
         </div>
-        <div class="row mt-3 text-center">
+        <div class="row mt-5 text-center">
             <div class="col-md-12">
                 @copyright
             </div> 
         </div>
     </div>
     <script>
+
+        function handleRadioChange() {
+            const radioValue = document.querySelector('input[name="checkRadio"]:checked');
+
+            if (radioValue.id === 'checkOnlyProfits') {
+                console.log(true);
+            } else {
+             console.log(false);   
+            }
+        }
+
+        document.querySelectorAll('input[name="checkRadio"]').forEach(function (radio) {
+            radio.addEventListener('change', handleRadioChange);
+        });
+
         document.getElementById('contribution').addEventListener('input', function() {
             this.value = convertToCurrency(this.value);
         });
